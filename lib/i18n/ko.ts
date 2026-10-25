@@ -1,0 +1,202 @@
+import { MEMBER_FEES, ORG } from "../site";
+import { money } from "./format";
+
+// 한국어 문구 사전. 영어 사전(en.ts)은 이 파일과 같은 구조여야 합니다.
+export const ko = {
+  meta: {
+    title: "글로벌미디어연합 회원가입",
+    description:
+      "글로벌미디어연합(GMU) — 지역의 시선을 세계로 확장하고, 현장과 사람을 연결하는 종합 미디어 연합 플랫폼. 일반회원·기업회원 가입 안내와 온라인 신청.",
+    privacyTitle: "개인정보처리방침 | 글로벌미디어연합",
+    termsTitle: "이용약관·환불규정 | 글로벌미디어연합",
+  },
+  brand: {
+    name: "글로벌미디어연합",
+    nameEn: "Global Media Union",
+    ceo: "박연진",
+    address: "부산광역시 동구 중앙대로 526 3층",
+    logoAlt: "글로벌미디어연합 로고",
+  },
+  period: "1년",
+  perPeriod: "/ 1년",
+  nav: {
+    about: "소개",
+    guide: "가입 안내",
+    refund: "환불 안내",
+    faq: "FAQ",
+    join: "회원가입",
+    main: "주요 메뉴",
+    openMenu: "메뉴 열기",
+    closeMenu: "메뉴 닫기",
+    switchLabel: "English",
+    switchAria: "Switch to English",
+  },
+  tagline: "지역의 시선을 세계로 확장하고, 현장과 사람을 연결하는 종합 미디어 연합 플랫폼",
+  hero: {
+    line1: "지역의 시선을 세계로,",
+    line2: "현장과 사람을 잇는 미디어 연합",
+    join: "회원 가입하기",
+    guide: "가입 안내 보기",
+    feeCaption: "회원 연회비",
+  },
+  member: {
+    individual: {
+      label: "일반회원",
+      description: "개인 자격으로 가입하는 회원",
+      fields: "성명, 전화번호, 이메일, 관심분야",
+    },
+    corporate: {
+      label: "기업회원",
+      description: "기업·기관 자격으로 가입하는 회원",
+      fields: "기업명, 대표자명, 전화번호, 이메일, 관심분야",
+    },
+  },
+  about: {
+    eyebrow: "ABOUT",
+    title: "글로벌미디어연합 소개",
+    visionTitle: "핵심 비전",
+    activityTitle: "주요 활동 영역",
+    visions: [
+      { title: "현장 중심성", body: "중간 단계를 최소화한 다이렉트 뉴스로 생생하고 투명한 현장의 목소리를 전합니다." },
+      { title: "글로벌 인사이트", body: "국내외 경제·시사 흐름을 깊이 있게 분석해 신뢰할 수 있는 정보를 제공합니다." },
+      { title: "상생 협력", body: "지역 사회와 주요 산업 생태계를 잇는 글로벌 네트워크를 만들어 갑니다." },
+    ],
+    activities: [
+      { title: "미디어 콘텐츠", body: "글로벌뉴스타임즈 등 인터넷 뉴스 채널을 운영하고, 매거진과 영상 콘텐츠를 제작합니다." },
+      {
+        title: "산업 파트너십",
+        body: "주요 기관과 산업계(예: 전력반도체 등)와 협력해 기술·시장 경쟁력을 알리고 확산합니다.",
+      },
+    ],
+  },
+  guide: {
+    eyebrow: "MEMBERSHIP",
+    title: "회원가입 안내",
+    typesTitle: "회원 구분과 연회비",
+    inputItems: "신청 시 입력 항목",
+    stepsTitle: "가입 절차",
+    steps: [
+      { title: "신청서 작성", body: "회원구분을 고르고 신청 정보를 입력합니다." },
+      { title: "카드 결제", body: "연회비를 카드로 결제합니다." },
+      { title: "가입 안내", body: "입력하신 이메일과 연락처로 가입 확인을 안내드립니다." },
+    ],
+  },
+  refund: {
+    eyebrow: "REFUND",
+    title: "환불 안내",
+    lead: "결제 후 **1개월 이내 취소** 시 회비 **100%**를 환불해 드립니다.",
+    rules: [
+      { title: "결제 당일 취소", body: "즉시 카드 승인취소로 처리됩니다. 카드 대금이 청구되지 않습니다." },
+      {
+        title: "결제 다음 날 ~ 1개월 이내 취소",
+        body: "회비 100%를 환불해 드립니다. 접수 후 영업일 기준 3~7일 안에 카드 승인취소를 진행하며, 카드사에 따라 취소가 반영되기까지 시간이 더 걸릴 수 있습니다. 이미 카드 대금이 청구된 경우에는 다음 달 청구금액에서 차감되거나 환급됩니다.",
+      },
+      {
+        title: "취소 접수 방법",
+        body: `이메일(${ORG.email}) 또는 전화(${ORG.phone})로 성명, 전화번호, 접수번호를 알려 주세요.`,
+      },
+    ],
+  },
+  faq: {
+    eyebrow: "FAQ",
+    title: "자주 묻는 질문",
+    items: [
+      {
+        q: "회비는 얼마인가요?",
+        a: `일반회원은 1년 ${money("ko", MEMBER_FEES.individual)}, 기업회원은 1년 ${money("ko", MEMBER_FEES.corporate)}입니다.`,
+      },
+      {
+        q: "결제는 어떻게 하나요?",
+        a: "신청서를 제출하면 카드로 결제하실 수 있습니다. 카드 정보는 결제대행사 결제창에서 직접 입력하며, 이 사이트에는 저장되지 않습니다.",
+      },
+      {
+        q: "환불이 가능한가요?",
+        a: "결제 당일은 즉시 취소되고, 1개월 이내 취소하시면 100% 환불해 드립니다. 자세한 내용은 환불 안내를 확인해 주세요.",
+      },
+      {
+        q: "일반회원과 기업회원은 무엇이 다른가요?",
+        a: "가입 자격과 연회비가 다르고, 기업회원은 기업명과 대표자명을 추가로 입력합니다.",
+      },
+      { q: "문의는 어디로 하나요?", a: `전화 ${ORG.phone} 또는 이메일 ${ORG.email}로 문의해 주세요.` },
+    ],
+  },
+  consent: {
+    itemsLabel: "수집 항목",
+    purposeLabel: "이용 목적",
+    retentionLabel: "보유 및 이용 기간",
+    items: "일반회원: 성명, 전화번호, 이메일, 관심분야 / 기업회원: 기업명, 대표자명, 전화번호, 이메일, 관심분야",
+    purpose: "회원 가입 확인 및 안내, 회비 결제 확인, 문의 응대",
+    retention:
+      "회원 자격 유지 기간 동안 보관하고 종료 후 지체 없이 파기합니다. 결제를 완료하지 않은 신청 정보는 접수일로부터 30일 후 파기합니다. 다만 전자상거래법에 따라 계약·청약철회·대금결제 기록은 5년, 소비자 불만·분쟁처리 기록은 3년 보관합니다.",
+    refusal: "개인정보 수집·이용에 동의하지 않으실 수 있으나, 동의하지 않으면 회원 가입이 어렵습니다.",
+  },
+  apply: {
+    eyebrow: "APPLY",
+    title: "회원 신청",
+    intro: "회원구분을 선택하고 신청 정보를 입력해 주세요. 회원구분에 따라 입력 항목이 달라집니다.",
+    memberType: "회원구분",
+    name: "성명",
+    companyName: "기업명",
+    ceoName: "대표자명",
+    phone: "전화번호",
+    email: "이메일",
+    interest: "관심분야",
+    interestHint: "관심 있는 분야를 자유롭게 적어 주세요. (예: 영상 제작, 경제 뉴스, 지역 산업 홍보)",
+    placeholderName: "홍길동",
+    placeholderCompany: "(주)글로벌미디어",
+    honeypot: "웹사이트",
+    consentLabel: "[필수] 개인정보 수집·이용에 동의합니다.",
+    consentMore: "수집·보관 안내 자세히 보기",
+    privacyLink: "개인정보처리방침 전문 보기",
+    feeCaption: "결제 예정 금액",
+    submit: "신청하고 결제 진행",
+    submitting: "접수 중…",
+    doneTitle: "신청이 접수되었습니다",
+    orderId: "접수번호",
+    memberRow: "회원구분",
+    amountRow: "결제 금액",
+    payButton: "카드 결제하기",
+    payPending: "카드 결제 (준비 중)",
+    payNote: `온라인 카드 결제는 곧 열립니다. 결제 방법은 입력하신 이메일과 연락처로 안내드리겠습니다. 접수번호를 꼭 기억해 주세요. 문의: ${ORG.phone}`,
+    errNetwork: "네트워크 오류가 발생했습니다. 연결을 확인한 뒤 다시 시도해 주세요.",
+    errGeneric: "접수 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+  },
+  validation: {
+    name: "성명을 입력해 주세요.",
+    nameMax: "성명은 30자 이내로 입력해 주세요.",
+    company: "기업명을 입력해 주세요.",
+    companyMax: "기업명은 60자 이내로 입력해 주세요.",
+    ceo: "대표자명을 입력해 주세요.",
+    ceoMax: "대표자명은 30자 이내로 입력해 주세요.",
+    phone: "전화번호를 정확히 입력해 주세요.",
+    email: "이메일 주소를 정확히 입력해 주세요.",
+    interest: "관심분야를 입력해 주세요.",
+    interestMax: "관심분야는 300자 이내로 입력해 주세요.",
+    consent: "개인정보 수집·이용에 동의해 주세요.",
+    invalid: "입력 내용을 확인해 주세요.",
+  },
+  api: {
+    tooMany: "요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.",
+    badRequest: "잘못된 요청입니다.",
+    saveFailed: `접수 중 문제가 발생했습니다. 잠시 후 다시 시도하거나 전화(${ORG.phone})로 문의해 주세요.`,
+  },
+  footer: {
+    ceo: "대표",
+    bizNo: "사업자등록번호",
+    mailOrder: "통신판매업신고번호",
+    address: "주소",
+    tel: "전화",
+    email: "이메일",
+    terms: "이용약관·환불규정",
+    privacy: "개인정보처리방침",
+    rights: "All rights reserved.",
+  },
+  legal: {
+    effective: "시행일",
+    effectiveDate: "2026년 11월 1일",
+    privacyTitle: "개인정보처리방침",
+    termsTitle: "이용약관 및 환불규정",
+  },
+};
+
+export type Dict = typeof ko;

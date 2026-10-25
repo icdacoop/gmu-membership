@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+/* Tailwind v4: 테마를 CSS에서 정의합니다. 로고의 빨강·검정을 기본 색으로 씁니다. */
+@theme {
+  --color-brand-50: #fef2f2;
+  --color-brand-100: #fee2e2;
+  --color-brand-600: #d71920; /* 로고 레드 */
+  --color-brand-700: #b3141a;
+  --color-brand-900: #4a0a0d;
+
+  --color-ink: #111111; /* 로고 블랙 */
+  --color-ink-soft: #1c1c1f;
+
+  --font-sans: "Pretendard Variable", Pretendard, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  color: var(--color-ink);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
