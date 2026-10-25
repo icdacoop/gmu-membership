@@ -1,0 +1,59 @@
+import { NextResponse } from "next/server";
+import { validateApplication } from "@/lib/validation";
+import { saveApplication } from "@/lib/sheet";
+import { MEMBER_FEES } from "@/lib/site";
+import { isPaymentReady } from "@/lib/payment";
+import { DEFAULT_LOCALE, getDict, isLocale } from "@/lib/i18n";
+
+// 같은 IP 에서 10분에 5번까지만 접수합니다. (서버리스 특성상 완전한 방어는 아니고, 단순 반복 방지용)
+const WINDOW_MS = 10 * 60 * 1000;
+const MAX_REQUESTS = 5;
+const hits = new Map<string, number[]>();
+
+function tooMany(ip: string) {
+  const now = Date.now();
+  const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
+  recent.push(now);
+  hits.set(ip, recent);
+  return recent.length > MAX_REQUESTS;
+}
+
+export async function POST(request: Request) {
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+
+  let raw: unknown;
+  try {
+    raw = await request.json();
+  } catch {
+    return NextResponse.json({ ok: false, error: getDict(DEFAULT_LOCALE).api.badRequest }, { status: 400 });
+  }
+
+  // 화면 언어(요청의 lang)에 맞춰 오류 문구를 돌려줍니다.
+  const requested = (raw as { lang?: unknown } | null)?.lang;
+  const lang = isLocale(requested) ? requested : DEFAULT_LOCALE;
+  const dict = getDict(lang);
+
+  if (tooMany(ip)) {
+    return NextResponse.json({ ok: false, error: dict.api.tooMany }, { status: 429 });
+  }
+
+  const result = validateApplication(raw, dict.validation);
+  if (!result.ok) {
+    return NextResponse.json({ ok: false, error: dict.validation.invalid, errors: result.errors }, { status: 400 });
+  }
+
+  // 숨김 칸(허니팟)이 채워져 있으면 봇으로 보고, 성공한 것처럼 응답만 하고 저장하지 않습니다.
+  if (result.data.website) {
+    return NextResponse.json({ ok: true, orderId: "GMU-0000", amount: 0, paymentReady: false });
+  }
+
+  try {
+    const { orderId } = await saveApplication(result.data, lang);
+    // 금액은 항상 서버의 회원구분별 설정값을 사용합니다.
+    const amount = MEMBER_FEES[result.data.memberType];
+    return NextResponse.json({ ok: true, orderId, amount, paymentReady: isPaymentReady() });
+  } catch (err) {
+    console.error("[apply] 저장 실패", err);
+    return NextResponse.json({ ok: false, error: dict.api.saveFailed }, { status: 500 });
+  }
+}
