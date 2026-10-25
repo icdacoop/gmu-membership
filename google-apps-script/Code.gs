@@ -8,6 +8,7 @@
  *
  * 기능
  *   - action 없음 / "apply" : 신청 저장 (접수번호를 만들어 돌려줌, 결제여부는 "결제대기")
+ *   - action "get_order"    : 접수번호로 회원구분·금액·결제여부 조회 (결제 확인 때 금액 대조용)
  *   - action "mark_paid"    : 접수번호로 행을 찾아 결제 결과 갱신 (결제 연동 후 사용)
  *
  * 열 순서 (열을 삭제하지 마세요. 보기 싫으면 숨기기를 사용하세요)
@@ -38,8 +39,18 @@ function doPost(e) {
   }
 
   if (!body.action || body.action === 'apply') return respond_(apply_(body, props));
+  if (body.action === 'get_order') return respond_(getOrder_(body));
   if (body.action === 'mark_paid') return respond_(markPaid_(body));
   return respond_({ ok: false, error: 'unknown_action' });
+}
+
+// 접수번호로 신청 정보 조회: 결제 확인 때 서버가 "저장된 금액"과 대조하기 위해 씁니다.
+function getOrder_(body) {
+  var sheet = getSheet_();
+  var row = findRow_(sheet, String(body.orderId || ''));
+  if (!row) return { ok: false, error: 'order_not_found' };
+  var v = sheet.getRange(row, 1, 1, HEADERS.length).getValues()[0];
+  return { ok: true, memberType: String(v[2]), amount: Number(v[9]) || 0, status: String(v[8]) };
 }
 
 // 신청 저장
