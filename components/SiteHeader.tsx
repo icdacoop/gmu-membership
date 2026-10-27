@@ -3,12 +3,28 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { Dict, Locale } from "@/lib/i18n";
 
 // path: 언어를 바꿀 때 같은 페이지로 이동하기 위한 현재 경로 (예: "" 또는 "/privacy")
 export default function SiteHeader({ lang, dict, path = "" }: { lang: Locale; dict: Dict; path?: string }) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
   const other: Locale = lang === "ko" ? "en" : "ko";
+
+  // 로고·이름을 누르면 첫 화면(맨 위)으로 갑니다.
+  // 이미 첫 페이지에 있으면 같은 주소로의 이동이라 화면이 그대로이므로, 직접 맨 위로 올리고 #앵커도 지웁니다.
+  // (다른 페이지에 있을 때는 평소처럼 첫 페이지로 이동하며 맨 위에서 열립니다.)
+  function goHome(e: React.MouseEvent<HTMLAnchorElement>) {
+    setOpen(false);
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return; // 새 탭 열기 등은 그대로 둠
+    if (pathname !== `/${lang}`) return;
+    e.preventDefault();
+    if (window.location.hash) {
+      window.history.replaceState(window.history.state, "", `/${lang}${window.location.search}`);
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" }); // CSS 설정에 따라 부드럽게(동작 줄이기 설정이면 즉시) 이동
+  }
 
   const nav = [
     { href: `/${lang}#about`, label: dict.nav.about },
@@ -42,7 +58,7 @@ export default function SiteHeader({ lang, dict, path = "" }: { lang: Locale; di
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-ink/95 text-white backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
-        <Link href={`/${lang}`} className="flex min-w-0 items-center gap-3" onClick={() => setOpen(false)}>
+        <Link href={`/${lang}`} className="flex min-w-0 items-center gap-3" onClick={goHome}>
           <Image src="/logo-original.png" alt="" width={36} height={36} className="rounded-full" priority />
           <span className="truncate text-base font-bold tracking-tight">{dict.brand.name}</span>
         </Link>

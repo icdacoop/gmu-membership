@@ -10,7 +10,7 @@ export default function ScrollTop() {
     function toTop() {
       // 주소에 #apply 같은 앵커가 붙어 있어도 첫 화면으로 열리도록 앵커를 지웁니다.
       if (window.location.hash) {
-        window.history.replaceState(null, "", window.location.pathname + window.location.search);
+        window.history.replaceState(window.history.state, "", window.location.pathname + window.location.search);
       }
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     }

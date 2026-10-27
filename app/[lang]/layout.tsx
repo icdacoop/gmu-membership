@@ -62,7 +62,9 @@ export default async function RootLayout({
   if (!isLocale(lang)) notFound();
 
   return (
-    <html lang={lang}>
+    // data-scroll-behavior: CSS 에서 부드러운 스크롤(scroll-behavior: smooth)을 쓰므로, 다른 페이지로 이동할 때만
+    // Next.js 가 이를 잠시 꺼서 새 페이지가 항상 맨 위에서 열리게 합니다. (없으면 이동 중 스크롤이 중간에 멈춤)
+    <html lang={lang} data-scroll-behavior="smooth">
       <head>
         <link
           rel="stylesheet"
