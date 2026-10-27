@@ -7,6 +7,7 @@ import Apply from "@/components/Apply";
 import Faq from "@/components/Faq";
 import SiteFooter from "@/components/SiteFooter";
 import { getDict, isLocale } from "@/lib/i18n";
+import { isPaymentReady } from "@/lib/payment";
 
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
@@ -20,7 +21,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         <Hero lang={lang} dict={dict} />
         <About dict={dict} />
         <Guide lang={lang} dict={dict} />
-        <Apply lang={lang} dict={dict} />
+        <Apply lang={lang} dict={dict} cardReady={isPaymentReady()} />
         <Faq dict={dict} />
       </main>
       <SiteFooter lang={lang} dict={dict} />

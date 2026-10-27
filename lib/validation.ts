@@ -33,12 +33,16 @@ function createApplySchema(m: Dict["validation"]) {
   // 사람이 아닌 프로그램이 채우는 숨김 칸. 값이 있는지는 API 에서 확인합니다.
   const website = z.string().max(200).optional();
 
+  // 결제수단. 값이 없으면 계좌이체로 봅니다.
+  const paymentMethod = z.enum(["bank", "card"]).default("bank");
+
   const individual = z.object({
     memberType: z.literal("individual"),
     name: z.string().trim().min(2, m.name).max(30, m.nameMax),
     phone,
     email,
     interest,
+    paymentMethod,
     consent,
     website,
   });
@@ -50,6 +54,7 @@ function createApplySchema(m: Dict["validation"]) {
     phone,
     email,
     interest,
+    paymentMethod,
     consent,
     website,
   });

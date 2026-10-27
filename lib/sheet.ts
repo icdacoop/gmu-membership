@@ -1,5 +1,5 @@
 import type { ApplyInput } from "./validation";
-import { MEMBER_FEES, SHEET_MEMBER_LABEL } from "./site";
+import { MEMBER_FEES, SHEET_MEMBER_LABEL, SHEET_PAYMENT_LABEL } from "./site";
 import type { Locale } from "./i18n";
 
 // 구글 시트(Apps Script 웹앱)와 주고받습니다. 서버에서만 호출하세요.
@@ -49,6 +49,7 @@ export async function saveApplication(data: ApplyInput, lang: Locale): Promise<S
     phone: data.phone,
     email: data.email,
     interest: data.interest,
+    payment_method: SHEET_PAYMENT_LABEL[data.paymentMethod],
     amount: MEMBER_FEES[data.memberType],
     consent_at: new Date().toISOString(),
     // 영어로 신청한 사람에게는 영어로 연락할 수 있도록 신청 언어도 기록합니다.

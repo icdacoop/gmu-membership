@@ -20,7 +20,8 @@ npm run dev
 |---|---|
 | `GOOGLE_SCRIPT_URL` | 구글 Apps Script 웹앱 주소 — [설정 방법](./google-apps-script/README.md) |
 | `APPLY_TOKEN` | 사이트와 Apps Script가 공유하는 비밀값 (이 사이트 전용으로 새로 생성) |
-| `PG_MERCHANT_ID`, `PG_SECRET_KEY` | 올고에서 받는 상점 정보 (결제 연동 후 사용) |
+| `BANK_NAME`, `BANK_ACCOUNT`, `BANK_HOLDER` | 계좌이체 안내에 보여 줄 은행명·계좌번호·예금주 (세 값 모두 필요, Vercel에도 등록) |
+| `PG_MERCHANT_ID`, `PG_SECRET_KEY` | 올고에서 받는 상점 정보 (카드 결제 연동 후 사용) |
 
 ## Vercel 배포
 
@@ -35,7 +36,14 @@ npm run dev
 - [ ] 푸터의 사업자 정보·주소가 맞다 (`lib/site.ts`, `lib/i18n/ko.ts`·`en.ts`의 `brand`)
 - [ ] 통신판매업 신고번호를 받았다면 `lib/site.ts`의 `mailOrderNo`에 입력
 
-## 결제(올고) 연동 상태
+## 계좌이체(무통장입금) — 현재 열려 있는 결제 방법
+
+신청 → 입금 안내 화면(은행·계좌·예금주·금액·입금자명) → 운영자가 입금 확인 후 시트에서 `결제완료`로 변경하는 흐름입니다. 운영 방법은 [google-apps-script/README.md](./google-apps-script/README.md)에 있습니다.
+
+- 입금 계좌는 환경변수(`BANK_*`)로 받습니다. 값이 없으면 "입금 계좌는 이메일·전화로 안내" 문구가 나옵니다.
+- 카드 결제는 `lib/payment.ts`의 `isPaymentReady()`가 `true`가 될 때까지 "준비 중"으로 막혀 있고, 서버도 카드 선택을 접수하지 않습니다.
+
+## 카드 결제(올고) 연동 상태
 
 PG와 무관한 부분은 준비되어 있습니다.
 

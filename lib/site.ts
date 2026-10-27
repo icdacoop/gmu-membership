@@ -23,6 +23,14 @@ export const MEMBER_FEES: Record<MemberType, number> = {
   corporate: 500000,
 };
 
+export type PaymentMethod = "bank" | "card";
+
+// 시트의 결제수단 열에 저장되는 값
+export const SHEET_PAYMENT_LABEL: Record<PaymentMethod, string> = {
+  bank: "계좌이체",
+  card: "카드",
+};
+
 // 시트에는 운영자가 읽기 쉽도록 언어와 상관없이 한글로 저장합니다.
 export const SHEET_MEMBER_LABEL: Record<MemberType, string> = {
   individual: "일반",

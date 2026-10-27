@@ -4,6 +4,7 @@ import { saveApplication } from "@/lib/sheet";
 import { MEMBER_FEES } from "@/lib/site";
 import { isPaymentReady } from "@/lib/payment";
 import { DEFAULT_LOCALE, getDict, isLocale } from "@/lib/i18n";
+import { getBankInfo } from "@/lib/bank";
 
 // 같은 IP 에서 10분에 5번까지만 접수합니다. (서버리스 특성상 완전한 방어는 아니고, 단순 반복 방지용)
 const WINDOW_MS = 10 * 60 * 1000;
@@ -44,14 +45,30 @@ export async function POST(request: Request) {
 
   // 숨김 칸(허니팟)이 채워져 있으면 봇으로 보고, 성공한 것처럼 응답만 하고 저장하지 않습니다.
   if (result.data.website) {
-    return NextResponse.json({ ok: true, orderId: "GMU-0000", amount: 0, paymentReady: false });
+    return NextResponse.json({ ok: true, orderId: "GMU-0000", amount: 0, paymentReady: false, paymentMethod: "bank", bank: null, depositor: "" });
+  }
+
+  // 카드 결제가 아직 열리지 않았다면 카드 선택은 접수하지 않습니다.
+  if (result.data.paymentMethod === "card" && !isPaymentReady()) {
+    return NextResponse.json({ ok: false, error: dict.api.cardNotReady }, { status: 400 });
   }
 
   try {
     const { orderId } = await saveApplication(result.data, lang);
     // 금액은 항상 서버의 회원구분별 설정값을 사용합니다.
     const amount = MEMBER_FEES[result.data.memberType];
-    return NextResponse.json({ ok: true, orderId, amount, paymentReady: isPaymentReady() });
+    const paymentMethod = result.data.paymentMethod;
+    // 입금자명 안내: 일반회원은 성명, 기업회원은 기업명
+    const depositor = result.data.memberType === "individual" ? result.data.name : result.data.companyName;
+    return NextResponse.json({
+      ok: true,
+      orderId,
+      amount,
+      paymentReady: isPaymentReady(),
+      paymentMethod,
+      bank: paymentMethod === "bank" ? getBankInfo() : null,
+      depositor,
+    });
   } catch (err) {
     console.error("[apply] 저장 실패", err);
     return NextResponse.json({ ok: false, error: dict.api.saveFailed }, { status: 500 });

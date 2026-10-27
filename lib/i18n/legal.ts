@@ -31,8 +31,9 @@ export function privacyContent(lang: Locale): { intro: string; sections: LegalSe
             ],
           },
           list: [
-            "자동 생성 정보: 접수번호, 접수일시, 개인정보 수집·이용 동의 일시, 신청 언어, 결제 거래번호·결제일시",
-            "카드번호 등 결제정보는 결제대행사 결제창에서 직접 입력되며 연합은 저장하지 않습니다.",
+            "자동 생성 정보: 접수번호, 접수일시, 개인정보 수집·이용 동의 일시, 신청 언어, 결제수단, 결제 거래번호·결제일시",
+            "계좌이체로 결제하시는 경우 입금 확인을 위해 은행 입금 내역(입금자명, 입금액)을 확인합니다.",
+            "카드번호 등 카드 결제정보는 결제대행사 결제창에서 직접 입력되며 연합은 저장하지 않습니다.",
           ],
         },
         { title: "2. 수집·이용 목적", paragraphs: [d.consent.purpose] },
@@ -93,7 +94,8 @@ export function privacyContent(lang: Locale): { intro: string; sections: LegalSe
           ],
         },
         list: [
-          "Automatically generated: application number, submission time, time of consent, application language, payment transaction number and payment time",
+          "Automatically generated: application number, submission time, time of consent, application language, payment method, payment transaction number and payment time",
+          "If you pay by bank transfer, we check the bank deposit record (depositor name and amount) to confirm your payment.",
           "Card details are entered directly on the payment provider's checkout page and are not stored by the Union.",
         ],
       },
@@ -178,8 +180,8 @@ export function termsContent(lang: Locale): { sections: LegalSection[] } {
         },
         after: [
           ko_
-            ? "회비는 카드로 결제하며, 결제가 완료되면 가입이 확정됩니다."
-            : "Fees are paid by card, and your membership is confirmed once payment is completed.",
+            ? "회비는 계좌이체(무통장입금)로 결제하며(카드 결제는 준비 중), 입금이 확인되면 가입이 확정됩니다."
+            : "Fees are paid by bank transfer (card payment is coming soon), and your membership is confirmed once the deposit is confirmed.",
         ],
       },
       {

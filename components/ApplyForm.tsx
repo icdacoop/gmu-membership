@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { MEMBER_FEES, MEMBER_TYPE_KEYS, type MemberType } from "@/lib/site";
+import { MEMBER_FEES, MEMBER_TYPE_KEYS, type MemberType, type PaymentMethod } from "@/lib/site";
 import { money, type Dict, type Locale } from "@/lib/i18n";
 import { formatPhone, validateApplication } from "@/lib/validation";
+import type { BankInfo } from "@/lib/bank";
+import BankGuide from "./BankGuide";
 
 type Values = {
   name: string;
@@ -27,7 +29,14 @@ const EMPTY: Values = {
   website: "",
 };
 
-type Done = { orderId: string; amount: number; paymentReady: boolean };
+type Done = {
+  orderId: string;
+  amount: number;
+  paymentReady: boolean;
+  paymentMethod: PaymentMethod;
+  bank: BankInfo | null;
+  depositor: string;
+};
 
 const inputClass =
   "mt-2 w-full rounded-xl border border-ink/20 bg-white px-4 py-3 text-base outline-none transition placeholder:text-ink/35 focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20 aria-[invalid=true]:border-brand-600";
@@ -62,9 +71,11 @@ function Field({
   );
 }
 
-export default function ApplyForm({ lang, dict }: { lang: Locale; dict: Dict }) {
+// cardReady: 카드 결제가 열려 있는지. false 이면 카드 선택지는 "준비 중"으로 막아 둡니다.
+export default function ApplyForm({ lang, dict, cardReady }: { lang: Locale; dict: Dict; cardReady: boolean }) {
   const t = dict.apply;
   const [memberType, setMemberType] = useState<MemberType>("individual");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("bank");
   const [values, setValues] = useState<Values>(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -97,6 +108,7 @@ export default function ApplyForm({ lang, dict }: { lang: Locale; dict: Dict }) 
         phone: values.phone,
         email: values.email,
         interest: values.interest,
+        paymentMethod,
         consent: values.consent,
         website: values.website,
       },
@@ -123,7 +135,14 @@ export default function ApplyForm({ lang, dict }: { lang: Locale; dict: Dict }) 
         setServerError(json?.error ?? t.errGeneric);
         return;
       }
-      setDone({ orderId: json.orderId, amount: json.amount, paymentReady: Boolean(json.paymentReady) });
+      setDone({
+        orderId: json.orderId,
+        amount: json.amount,
+        paymentReady: Boolean(json.paymentReady),
+        paymentMethod: json.paymentMethod === "card" ? "card" : "bank",
+        bank: json.bank ?? null,
+        depositor: json.depositor ?? "",
+      });
       document.getElementById("apply")?.scrollIntoView({ behavior: "smooth" });
     } catch {
       setServerError(t.errNetwork);
@@ -149,6 +168,10 @@ export default function ApplyForm({ lang, dict }: { lang: Locale; dict: Dict }) 
             <dd className="font-bold">{dict.member[memberType].label}</dd>
           </div>
           <div className="flex justify-between gap-4">
+            <dt className="text-ink/60">{t.paymentMethod}</dt>
+            <dd className="font-bold">{done.paymentMethod === "bank" ? t.methodBank : t.methodCard}</dd>
+          </div>
+          <div className="flex justify-between gap-4">
             <dt className="text-ink/60">{t.amountRow}</dt>
             <dd className="font-bold">
               {money(lang, done.amount || fee)} ({dict.period})
@@ -156,7 +179,9 @@ export default function ApplyForm({ lang, dict }: { lang: Locale; dict: Dict }) 
           </div>
         </dl>
 
-        {done.paymentReady ? (
+        {done.paymentMethod === "bank" ? (
+          <BankGuide lang={lang} dict={dict} bank={done.bank} amount={done.amount || fee} depositor={done.depositor} />
+        ) : done.paymentReady ? (
           <button
             type="button"
             className="mt-6 w-full max-w-sm rounded-full bg-brand-600 px-6 py-3.5 text-base font-bold text-white transition hover:bg-brand-700"
@@ -214,6 +239,48 @@ export default function ApplyForm({ lang, dict }: { lang: Locale; dict: Dict }) 
                   </span>
                 </span>
                 <span className="mt-1 block text-sm text-ink/60">{dict.member[key].description}</span>
+              </label>
+            );
+          })}
+        </div>
+      </fieldset>
+
+      <fieldset className="mt-8">
+        <legend className="text-sm font-semibold">
+          {t.paymentMethod}
+          <span className="ml-1 text-brand-600">*</span>
+        </legend>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          {(["bank", "card"] as PaymentMethod[]).map((method) => {
+            const disabled = method === "card" && !cardReady;
+            const active = paymentMethod === method;
+            return (
+              <label
+                key={method}
+                className={`rounded-2xl border-2 p-4 transition ${
+                  disabled
+                    ? "cursor-not-allowed border-ink/10 bg-neutral-50 opacity-60"
+                    : active
+                      ? "cursor-pointer border-brand-600 bg-brand-50"
+                      : "cursor-pointer border-ink/10 hover:border-ink/30"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value={method}
+                  checked={active}
+                  disabled={disabled}
+                  onChange={() => setPaymentMethod(method)}
+                  className="sr-only"
+                />
+                <span className="flex flex-wrap items-center justify-between gap-x-3">
+                  <span className="font-bold">{method === "bank" ? t.methodBank : t.methodCard}</span>
+                  {disabled && <span className="text-xs font-semibold text-ink/50">{t.methodSoon}</span>}
+                </span>
+                <span className="mt-1 block text-sm text-ink/60">
+                  {method === "bank" ? t.methodBankDesc : t.methodCardDesc}
+                </span>
               </label>
             );
           })}
@@ -371,7 +438,7 @@ export default function ApplyForm({ lang, dict }: { lang: Locale; dict: Dict }) 
           disabled={submitting}
           className="rounded-full bg-brand-600 px-8 py-3.5 text-base font-bold text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {submitting ? t.submitting : t.submit}
+          {submitting ? t.submitting : paymentMethod === "bank" ? t.submitBank : t.submit}
         </button>
       </div>
     </form>
