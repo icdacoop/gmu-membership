@@ -20,7 +20,7 @@ export const MEMBER_TYPE_KEYS: MemberType[] = ["individual", "corporate"];
 // 연회비(원). 서버는 항상 이 값만 결제 금액으로 씁니다.
 export const MEMBER_FEES: Record<MemberType, number> = {
   individual: 200000,
-  corporate: 500000,
+  corporate: 1000000,
 };
 
 export type PaymentMethod = "bank" | "card";
