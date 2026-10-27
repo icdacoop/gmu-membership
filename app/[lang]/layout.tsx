@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import "./globals.css";
 import { LOCALES, getDict, isLocale } from "@/lib/i18n";
+import ScrollTop from "@/components/ScrollTop";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -42,7 +43,10 @@ export default async function RootLayout({
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
         />
       </head>
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        <ScrollTop />
+        {children}
+      </body>
     </html>
   );
 }
