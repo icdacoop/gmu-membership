@@ -236,6 +236,14 @@ export const en: Dict = {
     orderId: "Application no.",
     retry: "Try again",
     home: "Back to home",
+    card: {
+      button: "Pay by card",
+      opening: "Opening the payment window…",
+      receipt: "View receipt",
+      scriptError: "We could not load the payment window. Please try again shortly or use bank transfer.",
+      cancelled: "The payment was not completed. Please try again.",
+      declined: "Your card payment was not approved. Please try another card or use bank transfer.",
+    },
   },
   footer: {
     ceo: "CEO",

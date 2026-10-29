@@ -10,3 +10,6 @@ npm-debug.log*
 .vercel
 *.tsbuildinfo
 next-env.d.ts
+
+# PG사에서 받은 연동 문서·샘플(비공개 자료, 담당자 연락처 포함)
+/PG/

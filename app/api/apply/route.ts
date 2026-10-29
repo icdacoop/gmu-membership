@@ -2,26 +2,12 @@ import { NextResponse } from "next/server";
 import { validateApplication } from "@/lib/validation";
 import { saveApplication } from "@/lib/sheet";
 import { MEMBER_FEES } from "@/lib/site";
-import { isPaymentReady } from "@/lib/payment";
+import { isPaymentReady, pgPublicConfig } from "@/lib/payment";
+import { clientIp, tooMany } from "@/lib/rateLimit";
 import { DEFAULT_LOCALE, getDict, isLocale } from "@/lib/i18n";
 import { getBankInfo } from "@/lib/bank";
 
-// 같은 IP 에서 10분에 5번까지만 접수합니다. (서버리스 특성상 완전한 방어는 아니고, 단순 반복 방지용)
-const WINDOW_MS = 10 * 60 * 1000;
-const MAX_REQUESTS = 5;
-const hits = new Map<string, number[]>();
-
-function tooMany(ip: string) {
-  const now = Date.now();
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-  recent.push(now);
-  hits.set(ip, recent);
-  return recent.length > MAX_REQUESTS;
-}
-
 export async function POST(request: Request) {
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-
   let raw: unknown;
   try {
     raw = await request.json();
@@ -34,7 +20,8 @@ export async function POST(request: Request) {
   const lang = isLocale(requested) ? requested : DEFAULT_LOCALE;
   const dict = getDict(lang);
 
-  if (tooMany(ip)) {
+  // 같은 IP 에서 10분에 5번까지만 접수합니다.
+  if (tooMany("apply", clientIp(request), 5, 10 * 60 * 1000)) {
     return NextResponse.json({ ok: false, error: dict.api.tooMany }, { status: 429 });
   }
 
@@ -45,7 +32,7 @@ export async function POST(request: Request) {
 
   // 숨김 칸(허니팟)이 채워져 있으면 봇으로 보고, 성공한 것처럼 응답만 하고 저장하지 않습니다.
   if (result.data.website) {
-    return NextResponse.json({ ok: true, orderId: "GMU-0000", amount: 0, paymentReady: false, paymentMethod: "bank", bank: null, depositor: "" });
+    return NextResponse.json({ ok: true, orderId: "GMU-0000", amount: 0, paymentReady: false, paymentMethod: "bank", bank: null, pg: null, depositor: "" });
   }
 
   // 카드 결제가 아직 열리지 않았다면 카드 선택은 접수하지 않습니다.
@@ -67,6 +54,8 @@ export async function POST(request: Request) {
       paymentReady: isPaymentReady(),
       paymentMethod,
       bank: paymentMethod === "bank" ? getBankInfo() : null,
+      // 카드 결제창 호출에 필요한 공개 값(결제키·환경). 서버 호출용 비밀키는 포함하지 않음
+      pg: paymentMethod === "card" ? pgPublicConfig() : null,
       depositor,
     });
   } catch (err) {

@@ -2,6 +2,7 @@ import { MEMBER_FEES, MEMBER_TYPE_KEYS, ORG } from "../site";
 import { money, type Locale } from "./format";
 import { ko } from "./ko";
 import { en } from "./en";
+import { cardOpenCopy, isCardOpen } from "./cardOpen";
 
 // 개인정보처리방침·이용약관 본문. 화면에서는 LegalSections 컴포넌트가 이 구조를 그대로 그립니다.
 export type LegalSection = {
@@ -58,7 +59,7 @@ export function privacyContent(lang: Locale): { intro: string; sections: LegalSe
           table: {
             head: ["수탁자", "위탁 업무"],
             rows: [
-              ["올고(결제대행사)", "회비 카드 결제 처리"],
+              ["건흥페이먼츠(결제대행사)", "회비 카드 결제 처리"],
               ["Google LLC", "신청 정보 저장·관리 (구글 스프레드시트, 미국 등 국외 서버)"],
             ],
           },
@@ -127,7 +128,7 @@ export function privacyContent(lang: Locale): { intro: string; sections: LegalSe
         table: {
           head: ["Processor", "Entrusted task"],
           rows: [
-            ["Allgo (payment service provider)", "Processing membership fee card payments"],
+            ["GH Payments / 건흥페이먼츠 (payment service provider)", "Processing membership fee card payments"],
             ["Google LLC", "Storing and managing application data (Google Sheets; servers outside Korea, including the United States)"],
           ],
         },
@@ -179,9 +180,11 @@ export function termsContent(lang: Locale): { sections: LegalSection[] } {
           ]),
         },
         after: [
-          ko_
-            ? "회비는 계좌이체(무통장입금)로 결제하며(카드 결제는 준비 중), 입금이 확인되면 가입이 확정됩니다."
-            : "Fees are paid by bank transfer (card payment is coming soon), and your membership is confirmed once the deposit is confirmed.",
+          isCardOpen()
+            ? cardOpenCopy[lang].termsPay
+            : ko_
+              ? "회비는 계좌이체(무통장입금)로 결제하며(카드 결제는 준비 중), 입금이 확인되면 가입이 확정됩니다."
+              : "Fees are paid by bank transfer (card payment is coming soon), and your membership is confirmed once the deposit is confirmed.",
         ],
       },
       {

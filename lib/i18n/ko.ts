@@ -218,6 +218,14 @@ export const ko = {
     orderId: "접수번호",
     retry: "다시 시도하기",
     home: "처음으로",
+    card: {
+      button: "카드 결제하기",
+      opening: "결제창을 여는 중…",
+      receipt: "영수증 보기",
+      scriptError: "결제창을 불러오지 못했습니다. 잠시 후 다시 시도하거나 계좌이체를 이용해 주세요.",
+      cancelled: "결제가 완료되지 않았습니다. 다시 시도해 주세요.",
+      declined: "카드 결제가 승인되지 않았습니다. 다른 카드로 다시 시도하시거나 계좌이체를 이용해 주세요.",
+    },
   },
   footer: {
     ceo: "대표",

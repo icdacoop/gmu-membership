@@ -6,6 +6,7 @@ import { money, type Dict, type Locale } from "@/lib/i18n";
 import { formatPhone, validateApplication } from "@/lib/validation";
 import type { BankInfo } from "@/lib/bank";
 import BankGuide from "./BankGuide";
+import CardPay from "./CardPay";
 
 type Values = {
   name: string;
@@ -35,6 +36,8 @@ type Done = {
   paymentReady: boolean;
   paymentMethod: PaymentMethod;
   bank: BankInfo | null;
+  // 카드 결제창 호출에 필요한 공개 값(결제키·환경). 카드를 골랐고 결제가 열려 있을 때만 있음
+  pg: { publicKey: string; env: "sandbox" | "live" } | null;
   depositor: string;
 };
 
@@ -141,6 +144,7 @@ export default function ApplyForm({ lang, dict, cardReady }: { lang: Locale; dic
         paymentReady: Boolean(json.paymentReady),
         paymentMethod: json.paymentMethod === "card" ? "card" : "bank",
         bank: json.bank ?? null,
+        pg: json.pg ?? null,
         depositor: json.depositor ?? "",
       });
       document.getElementById("apply")?.scrollIntoView({ behavior: "smooth" });
@@ -181,13 +185,21 @@ export default function ApplyForm({ lang, dict, cardReady }: { lang: Locale; dic
 
         {done.paymentMethod === "bank" ? (
           <BankGuide lang={lang} dict={dict} bank={done.bank} amount={done.amount || fee} depositor={done.depositor} />
-        ) : done.paymentReady ? (
-          <button
-            type="button"
-            className="mt-6 w-full max-w-sm rounded-full bg-brand-600 px-6 py-3.5 text-base font-bold text-white transition hover:bg-brand-700"
-          >
-            {t.payButton}
-          </button>
+        ) : done.paymentReady && done.pg ? (
+          <CardPay
+            lang={lang}
+            dict={dict}
+            orderId={done.orderId}
+            amount={done.amount || fee}
+            pg={done.pg}
+            payer={{
+              memberType,
+              // 카드 결제창의 구매자명: 일반회원은 성명, 기업회원은 기업명
+              name: memberType === "individual" ? values.name : values.companyName,
+              phone: values.phone,
+              email: values.email,
+            }}
+          />
         ) : (
           <>
             <button
