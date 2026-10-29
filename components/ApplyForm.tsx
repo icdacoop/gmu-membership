@@ -78,7 +78,8 @@ function Field({
 export default function ApplyForm({ lang, dict, cardReady }: { lang: Locale; dict: Dict; cardReady: boolean }) {
   const t = dict.apply;
   const [memberType, setMemberType] = useState<MemberType>("individual");
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("bank");
+  // 목록 맨 앞(카드)이 열려 있으면 카드를, 아직 "준비 중"이면 계좌이체를 기본으로 선택합니다.
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(cardReady ? "card" : "bank");
   const [values, setValues] = useState<Values>(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -263,7 +264,7 @@ export default function ApplyForm({ lang, dict, cardReady }: { lang: Locale; dic
           <span className="ml-1 text-brand-600">*</span>
         </legend>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
-          {(["bank", "card"] as PaymentMethod[]).map((method) => {
+          {(["card", "bank"] as PaymentMethod[]).map((method) => {
             const disabled = method === "card" && !cardReady;
             const active = paymentMethod === method;
             return (
