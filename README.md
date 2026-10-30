@@ -22,7 +22,7 @@ npm run dev
 | `APPLY_TOKEN` | 사이트와 Apps Script가 공유하는 비밀값 (이 사이트 전용으로 새로 생성) |
 | `BANK_NAME`, `BANK_ACCOUNT`, `BANK_HOLDER` | 계좌이체 안내에 보여 줄 은행명·계좌번호·예금주 (세 값 모두 필요, Vercel에도 등록) |
 | `PG_PUBLIC_KEY` | 카드 결제창용 온라인 결제키(`pk_…`). **이 값이 있어야 카드 결제가 열립니다** |
-| `PG_SECRET_KEY` | (선택) 서버 호출용 키. 비우면 `PG_PUBLIC_KEY`를 그대로 사용 |
+| `PG_SECRET_KEY` | 올고는 `pk_` 키 한 가지만 쓰므로 **비워 둡니다**(비우면 `PG_PUBLIC_KEY`를 서버 호출에도 그대로 사용). 다른 값을 넣으면 서버 호출 인증이 그 값으로 바뀌어 실패합니다 |
 | `PG_ENV` | `sandbox`(테스트, 기본) / `live`(운영). 운영 결제를 열 때만 `live` |
 | `PG_WEBHOOK_TOKEN`, `PG_WEBHOOK_IPS` | 웹훅 보호용 비밀 토큰, 허용 IP 목록 (권장) |
 
