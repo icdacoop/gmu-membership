@@ -7,7 +7,7 @@ export const en: Dict = {
   meta: {
     title: "Global Media Union Membership",
     description:
-      "Global Media Union (GMU) — a comprehensive media alliance platform that extends local perspectives to the world and connects people with the field. Membership guide and online application for individuals and companies.",
+      "Global Media Union (GMU) is a media alliance connecting local perspectives with the world. Learn about membership and apply online as an individual or a company.",
     privacyTitle: "Privacy Policy | Global Media Union",
     termsTitle: "Terms & Refund Policy | Global Media Union",
     privacyDescription:
