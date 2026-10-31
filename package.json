@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:apps-script": "node tests/apps-script/payment-method.test.cjs && node tests/apps-script/purge.test.cjs",
+    "test:pg": "node tests/pg/run-all.mjs",
+    "audit:seo": "node tests/seo-audit.mjs"
   },
   "dependencies": {
     "next": "16.4.3",

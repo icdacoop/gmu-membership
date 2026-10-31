@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // 시험·생성 도구(Node 스크립트): 앱 코드가 아니므로 린트 대상에서 제외
+    "tests/**",
+    "scripts/**",
   ]),
 ]);
 
