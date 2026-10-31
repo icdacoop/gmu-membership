@@ -10,6 +10,10 @@ export const en: Dict = {
       "Global Media Union (GMU) — a comprehensive media alliance platform that extends local perspectives to the world and connects people with the field. Membership guide and online application for individuals and companies.",
     privacyTitle: "Privacy Policy | Global Media Union",
     termsTitle: "Terms & Refund Policy | Global Media Union",
+    privacyDescription:
+      "How Global Media Union collects, uses and retains the personal information you provide when applying for membership, and your rights.",
+    termsDescription:
+      "Annual membership fees, payment methods, refund policy and business information for Global Media Union.",
   },
   brand: {
     name: "Global Media Union",

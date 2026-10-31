@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SiteHeader from "@/components/SiteHeader";
 import Hero from "@/components/Hero";
@@ -8,6 +9,14 @@ import Faq from "@/components/Faq";
 import SiteFooter from "@/components/SiteFooter";
 import { getDict, isLocale } from "@/lib/i18n";
 import { isPaymentReady } from "@/lib/payment";
+import { pageMetadata } from "@/lib/seo";
+
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  if (!isLocale(lang)) return {};
+  const dict = getDict(lang);
+  return pageMetadata(lang, dict, "", { title: dict.meta.title, description: dict.meta.description });
+}
 
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
