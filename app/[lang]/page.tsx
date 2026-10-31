@@ -7,6 +7,7 @@ import Guide from "@/components/Guide";
 import Apply from "@/components/Apply";
 import Faq from "@/components/Faq";
 import SiteFooter from "@/components/SiteFooter";
+import JsonLd from "@/components/JsonLd";
 import { getDict, isLocale } from "@/lib/i18n";
 import { isPaymentReady } from "@/lib/payment";
 import { pageMetadata } from "@/lib/seo";
@@ -25,6 +26,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
   return (
     <>
+      <JsonLd lang={lang} dict={dict} />
       <SiteHeader lang={lang} dict={dict} />
       <main>
         <Hero lang={lang} dict={dict} />
