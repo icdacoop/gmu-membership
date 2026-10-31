@@ -9,8 +9,9 @@ export default function Hero({ lang, dict }: { lang: Locale; dict: Dict }) {
         aria-hidden
         className="pointer-events-none absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-brand-600/30 blur-3xl"
       />
-      <div className="relative mx-auto grid max-w-6xl gap-12 px-4 py-16 sm:px-6 md:grid-cols-[1.3fr_1fr] md:items-center md:py-24">
-        <div>
+      <div className="relative mx-auto grid max-w-6xl grid-cols-1 gap-12 px-4 py-16 sm:px-6 md:grid-cols-[1.3fr_1fr] md:items-center md:py-24">
+        {/* min-w-0: 그리드 칸이 안쪽 내용(예: 연회비 줄)의 최소 폭 때문에 화면보다 넓어지지 않도록 함 */}
+        <div className="min-w-0">
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-brand-600">{dict.brand.nameEn}</p>
           <h1 className="text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl">
             {dict.hero.line1}
@@ -35,7 +36,7 @@ export default function Hero({ lang, dict }: { lang: Locale; dict: Dict }) {
           </div>
         </div>
 
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8">
+        <div className="min-w-0 rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8">
           <div className="mb-6 flex items-center gap-4">
             <Image src="/logo-original.png" alt={dict.brand.logoAlt} width={64} height={64} className="rounded-full" />
             <div>
@@ -47,7 +48,7 @@ export default function Hero({ lang, dict }: { lang: Locale; dict: Dict }) {
           </div>
           <ul className="space-y-3">
             {MEMBER_TYPE_KEYS.map((key) => (
-              <li key={key} className="flex items-center justify-between gap-3 rounded-2xl bg-white/10 px-5 py-4">
+              <li key={key} className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 rounded-2xl bg-white/10 px-5 py-4">
                 <span className="font-semibold">{dict.member[key].label}</span>
                 <span className="whitespace-nowrap text-lg font-extrabold">
                   {money(lang, MEMBER_FEES[key])}

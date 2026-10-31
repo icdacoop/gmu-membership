@@ -23,7 +23,7 @@ export default function LegalPage({
         <p className="mt-2 text-sm text-ink/50">
           {dict.legal.effective} {dict.legal.effectiveDate}
         </p>
-        <div className="mt-10 space-y-10 leading-relaxed text-ink/80 [&_h2]:mb-3 [&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-ink [&_li]:mt-1.5 [&_table]:w-full [&_table]:text-sm [&_td]:border [&_td]:border-ink/15 [&_td]:p-3 [&_th]:border [&_th]:border-ink/15 [&_th]:bg-neutral-50 [&_th]:p-3 [&_th]:text-left [&_ul]:list-disc [&_ul]:pl-5">
+        <div className="mt-10 space-y-10 leading-relaxed text-ink/80 [&_h2]:mb-3 [&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-ink [&_li]:mt-1.5 [&_table]:w-full [&_table]:text-sm [&_td]:border [&_td]:border-ink/15 [&_td]:p-3 [&_td]:[overflow-wrap:anywhere] [&_th]:border [&_th]:border-ink/15 [&_th]:bg-neutral-50 [&_th]:p-3 [&_th]:text-left [&_th]:[overflow-wrap:anywhere] [&_ul]:list-disc [&_ul]:pl-5">
           {children}
         </div>
       </main>
